@@ -392,6 +392,18 @@ $greencolour: green;
                   border-radius: 15%;
                 }
               }
+
+              .cat{
+                display: flex;
+                // flex-direction: column;
+                align-items: center;
+                margin: 5px;
+                gap: 5px    ;
+                input{
+                   margin: 0;
+                }
+              }
+
             }
           }
         }
