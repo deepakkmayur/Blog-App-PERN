@@ -4,7 +4,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import axios from 'axios'
 
 const Register = () => {
-const [state,setState] =useState({username:"",email:"",password:""})
+const [state,setState] =useState({username:"",email:"",password:"",firstname:""})
 const [error,setError]=useState(null)
 const navigate=useNavigate()
 
@@ -32,6 +32,7 @@ const registerFormSubmit=async (e)=>{
       <h1>Register</h1>
       <form action="" onSubmit={registerFormSubmit}>
         <input type="text" name="username" value={state.username}  placeholder='Username' onChange={inputHandler}/>
+        <input type="text" name="firstname" value={state.firstname}  placeholder='Firstname' onChange={inputHandler}/>
         <input type="email" name="email" value={state.email}placeholder='Email' onChange={inputHandler}/>
         <input type="password" name="password" value={state.password} placeholder='Password' onChange={inputHandler}/>  
         <button>Register</button>  

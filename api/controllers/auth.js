@@ -10,7 +10,7 @@ const generateJwtToken=(username)=>{
 
 export const register = async (req, res) => {  
  try {
-   const {password,username,email}=req.body
+   const {password,username,email,firstname}=req.body
     // check existing user 
  const existingUser=await pool.query(`select * from users where email='${req.body.email}' or username= '${req.body.username}'`)  
  if(existingUser.rows.length){//length > 0
@@ -19,8 +19,8 @@ export const register = async (req, res) => {
   const salt=await bcrypt.genSalt(10);
   const hashedPassword=await bcrypt.hash(password,salt)
 
-  const psql="INSERT INTO users (email,username,password) Values($1,$2,$3) returning id"
-  const values=[email,username,hashedPassword]      
+  const psql="INSERT INTO users (email,username,password,firstname) Values($1,$2,$3,$4) returning id"
+  const values=[email,username,hashedPassword,firstname]      
   const result=await pool.query(psql,values)
    
    res.status(201).json({message:"User created succussfully"}) 
@@ -35,7 +35,6 @@ export const register = async (req, res) => {
 
 
 export const login = async (req, res) => {     
-   console.log("rchd login -----=- ");
    try {
       if(req.body.username&&req.body.password){
          // const sql="select * from users where id=$"

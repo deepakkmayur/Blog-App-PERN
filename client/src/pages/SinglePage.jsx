@@ -1,10 +1,34 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
+import React, { useEffect, useState } from 'react'
+import { Link, useLocation } from 'react-router-dom'
 import Delete from '../images/delete.png'
 import Edit from '../images/edit.png'
 import Menu from '../components/Menu'
-
+import axios from 'axios'
+ 
 const SinglePage = () => {
+  const [post,setPost]=useState({})
+
+  const location=useLocation().pathname
+  const postId=location.split("/")[2]
+  // console.log(postId,"-----------------------");
+  // console.log(location,"location///////////////////");    
+
+  useEffect(()=>{
+    const fetchData=async ()=>{
+        try {
+      //  const response=await axios.get("http://localhost:3003/api/posts")
+       const response=await axios.get(`http://localhost:3003/api/posts/${postId}`)
+      //  console.log(response,"response");  
+    
+       setPost([response.data])
+      } catch (error) {
+        console.log("............");
+        console.log(error,"//login page//");
+      }
+    }
+    fetchData()
+  },[postId])
+
   return (
     <div className='single'>
       <div className="content">
