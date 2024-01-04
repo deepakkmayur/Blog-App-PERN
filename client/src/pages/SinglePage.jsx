@@ -1,26 +1,32 @@
-import React, { useEffect, useState } from 'react'
-import { Link, useLocation } from 'react-router-dom'
+import React, { useContext, useEffect, useState } from 'react'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import Delete from '../images/delete.png'
 import Edit from '../images/edit.png'
 import Menu from '../components/Menu'
 import axios from 'axios'
+import moment from "moment"
+import { AuthContext } from '../context/AuthContext'
  
 const SinglePage = () => {
   const [post,setPost]=useState({})
 
   const location=useLocation().pathname
+  const navigate=useNavigate()
   const postId=location.split("/")[2]
-  // console.log(postId,"-----------------------");
-  // console.log(location,"location///////////////////");    
+  console.log(postId,"-------postId----------------");
+  // console.log(location,"location///////////////////");   
+  
+  const {currentUser}=useContext(AuthContext)
 
   useEffect(()=>{
     const fetchData=async ()=>{
         try {
       //  const response=await axios.get("http://localhost:3003/api/posts")
        const response=await axios.get(`http://localhost:3003/api/posts/${postId}`)
-      //  console.log(response,"response");  
+       console.log(response,"response in SinglePage page----------");  
+
     
-       setPost([response.data])
+       setPost(response.data)
       } catch (error) {
         console.log("............");
         console.log(error,"//login page//");
@@ -28,29 +34,37 @@ const SinglePage = () => {
     }
     fetchData()
   },[postId])
+  // console.log(post,"post=======");
+
+  const handleDelete =async()=>{
+      await axios.delete(`http://localhost:3003/api/posts/${postId}`)
+      navigate("/")
+  }
 
   return (
     <div className='single'>
       <div className="content">
-        <img src="https://tse1.mm.bing.net/th?id=OIP.mQv5x97qtno9t08G-Wm_cAHaEK&pid=Api&P=0&h=180" alt="" />
+        {/* <img src="https://tse1.mm.bing.net/th?id=OIP.mQv5x97qtno9t08G-Wm_cAHaEK&pid=Api&P=0&h=180" alt="" /> */}
+        <img src={post.postimage} alt="loading" />
         <div className="user">
-          <img src=" https://tse1.mm.bing.net/th?id=OIP.NbfPECA64xbFnmW58MbWDQHaEo&pid=Api&P=0&h=180" alt="" />
+          {/* <img src=" https://tse1.mm.bing.net/th?id=OIP.NbfPECA64xbFnmW58MbWDQHaEo&pid=Api&P=0&h=180" alt="" /> */}
+          {post.userimage && <img src={post.userimage} alt="user image" />}
          <div className="info">  
           <span >Deepak</span>
-          <p style={{ margin:'0' }}>posted two days ago</p> 
+          <p style={{ margin: '0' }}>posted {moment(post.date).fromNow()}</p>
+
          </div>
-         <div className="edit">
-         <img src={ Delete} alt=""/>
-        <Link to={`/write/edit=2`}> <img src={ Edit} alt=""/></Link>
+      {currentUser.username===post.username &&  <div className="edit">
+         <img onClick={handleDelete} src={ Delete} alt=""/>
+        <Link to={`/write/edit=2`}>
+           <img src={ Edit} alt=""/>
+           </Link>
          </div>
+         }
+
         </div>
-         <h1>Lorem ipsum dolor sit Sapiente voluptates vitae maiores.</h1>
-        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Facilis, debitis dolorem modi beatae, eius at ullam corporis vero omnis cum itaque doloremque deserunt reprehenderit dolores nemo, quod eaque recusandae commodi?
-        Exercitationem quos vitae sed nesciunt culpa similique tenetur accusantium cupiditate vero, numquam at neque, obcaecati possimus labore beatae quidem eius, impedit quis facilis doloribus pariatur cumque voluptatum itaque? Sed, corrupti.
-        Eos, ad. Repellat, obcaecati, porro corporis in quia ad itaque a accusantium, delectus officiis quo magni nihil corrupti fuga dignissimos dolorem sit sunt tenetur atque repellendus sequi suscipit labore? Reiciendis?
-        Quis, quae odit perferendis necessitatibus totam id et deleniti fuga laborum autem sit repellat rem, iste veniam similique, obcaecati at velit magnam quia dolorem nam! Quae nulla ipsam quas accusantium!
-        Alias eligendi dolore et tempore consequatur itaque consectetur, maiores, dignissimos expedita magni eius libero voluptates doloremque cupiditate repellat adipisci reiciendis vero veritatis dolor quis officiis numquam illum ad eum! Soluta!
-        </p>
+         <h1>{post.title}</h1>
+        {post.desc} 
       </div>
         <Menu/>
       {/* <div className="menu">m</div> */}

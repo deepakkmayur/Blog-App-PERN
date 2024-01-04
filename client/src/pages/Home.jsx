@@ -6,14 +6,14 @@ const Home = () => {
   const [posts,setPosts]=useState([])
 
   const cat=useLocation().search
-  console.log(cat,"cat///////////////////");    
+  // console.log(cat,"cat///////////////////");    
 
   useEffect(()=>{
     const fetchData=async ()=>{
         try {
       //  const response=await axios.get("http://localhost:3003/api/posts")
        const response=await axios.get(`http://localhost:3003/api/posts/${cat}`)
-      //  console.log(response,"response");  
+       console.log(response,"response in Home page----------");  
     
        setPosts([response.data])
       } catch (error) {
@@ -23,7 +23,7 @@ const Home = () => {
     }
     fetchData()
   },[cat])
- console.log(posts,"posts");
+//  console.log(posts,"posts");
   // const posts = [
   //   {
   //     id: 1,
